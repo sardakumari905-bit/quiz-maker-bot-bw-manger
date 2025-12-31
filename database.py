@@ -7,18 +7,15 @@ try:
     client = pymongo.MongoClient(MONGO_URI, tlsCAFile=certifi.where())
     db = client['QuizBotDB']
     quizzes_col = db['quizzes']
-    print("✅ Database Connected!")
+    print("✅ Database Connected Successfully!")
 except Exception as e:
-    print(f"❌ Error: {e}")
+    print(f"❌ Database Error: {e}")
 
-# Temporary memory for creation process
+# टेंपरेरी मेमोरी (क्विज़ बनाते समय के लिए)
 user_state = {}
 
-# --- Save Function (Updated for Polls) ---
+# --- नया सेव फंक्शन (Polls के लिए) ---
 def save_new_quiz(user_id, title, desc, question, options, correct_id):
-    # options: एक लिस्ट होगी ['Opt1', 'Opt2', 'Opt3', 'Opt4']
-    # correct_id: सही जवाब का नंबर (0, 1, 2, या 3)
-    
     quiz_id = f"quiz_{user_id}_{str(title).replace(' ', '')[:5]}"
     
     data = {
@@ -27,8 +24,8 @@ def save_new_quiz(user_id, title, desc, question, options, correct_id):
         "title": title,
         "desc": desc,
         "question": question,
-        "options": options,           # नई चीज़
-        "correct_option_id": correct_id # नई चीज़
+        "options": options,            # चारों ऑप्शन्स
+        "correct_option_id": correct_id # सही जवाब का नंबर (0-3)
     }
     quizzes_col.insert_one(data)
     return quiz_id
